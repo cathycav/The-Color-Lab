@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Color Lab — Cathy Cavander</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#ffffff;--bg2:#f7f6f4;--fg:#1a1a1a;--fg2:#6b6b6b;--fg3:#a8a8a8;--line:#e8e6e2;--line2:#d0cdc8;--pill:#f0ede8;--pill-text:#666;--sans:'Poppins',sans-serif;--mono:'DM Mono',monospace}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100vh;-webkit-font-smoothing:antialiased}
+.section{padding:80px 10%;border-bottom:1px solid var(--line)}
+.section-header{margin-bottom:32px}
+.hero-title{font-size:clamp(36px,5vw,60px);font-weight:300;line-height:1.1;margin-bottom:0}
+.hero-title em{font-style:italic;color:var(--fg2)}
+.hero-sub{font-size:15px;font-weight:300;line-height:1.75;color:var(--fg2);margin-bottom:56px;margin-top:16px;max-width:560px}
+.question-block{display:grid;grid-template-columns:72px 1fr;border-top:1px solid var(--line);padding:40px 0;align-items:start}
+.question-block:last-child{border-bottom:1px solid var(--line)}
+.q-num{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--fg3);text-transform:uppercase;padding-top:4px}
+.q-text{font-size:22px;font-weight:300;line-height:1.35;margin-bottom:24px}
+.options-row{display:flex;flex-wrap:wrap;gap:8px}
+.option-pill{background:var(--pill);border:1px solid transparent;color:var(--pill-text);font-family:var(--sans);font-size:13px;padding:8px 18px;cursor:pointer;transition:all .2s;border-radius:2px}
+.option-pill:hover{border-color:var(--line2);color:var(--fg)}
+.option-pill.selected{background:var(--fg);color:var(--bg)}
+.open-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--line2);color:var(--fg);font-family:var(--sans);font-size:20px;font-weight:300;padding:8px 0;outline:none}
+.open-input::placeholder{color:var(--fg3)}
+.open-input:focus{border-color:var(--fg2)}
+.btn-row{margin-top:64px}
+.generate-btn{display:inline-flex;align-items:center;gap:14px;background:var(--fg);color:var(--bg);border:none;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:18px 44px;cursor:pointer;border-radius:2px;transition:all .25s}
+.generate-btn:hover{opacity:.85;transform:translateY(-1px)}
+.generate-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+#result-area{display:none}
+.palette-header{padding:80px 10% 60px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end}
+.palette-name{font-size:clamp(40px,6vw,80px);font-weight:300;line-height:.95}
+.palette-subtitle{font-style:italic;font-size:17px;font-weight:300;color:var(--fg2);margin-bottom:16px}
+.palette-description{font-size:14px;font-weight:300;line-height:1.75;color:var(--fg2)}
+.swatches-container{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--line)}
+.swatch{aspect-ratio:3/4;position:relative;cursor:pointer;overflow:hidden}
+.swatch:hover{filter:brightness(1.05)}
+.swatch-color{width:100%;height:100%}
+.swatch-info{position:absolute;bottom:0;left:0;right:0;padding:16px 12px 12px;background:linear-gradient(transparent,rgba(0,0,0,0.55));opacity:0;transition:opacity .25s}
+.swatch:hover .swatch-info{opacity:1}
+.swatch-role{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.6);text-transform:uppercase;display:block;margin-bottom:3px}
+.swatch-name{font-size:13px;font-weight:300;color:rgba(255,255,255,.95);display:block;margin-bottom:2px}
+.swatch-hex{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.65)}
+.export-section{padding:28px 10%;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.export-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg3);margin-right:8px}
+.export-btn{background:var(--bg2);border:1px solid var(--line);color:var(--fg2);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:9px 16px;cursor:pointer;border-radius:2px;transition:all .2s}
+.export-btn:hover{border-color:var(--line2);color:var(--fg)}
+.preview-section{padding:60px 10%;border-bottom:1px solid var(--line)}
+.preview-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg3);margin-bottom:24px}
+.live-preview{border:1px solid var(--line);overflow:hidden;height:280px;border-radius:3px;display:flex}
+.preview-sidebar{width:180px;flex-shrink:0;padding:28px 20px;display:flex;flex-direction:column;justify-content:space-between;transition:background .7s}
+.preview-logo-line{height:10px;width:60%;border-radius:2px;margin-bottom:5px;transition:background .7s}
+.preview-logo-sub{height:6px;width:80%;border-radius:2px;opacity:.4;transition:background .7s}
+.preview-nav{display:flex;flex-direction:column;gap:8px}
+.preview-nav-item{height:7px;border-radius:2px;opacity:.3;transition:background .7s}
+.preview-nav-item.active{opacity:1}
+.preview-main{flex:1;padding:36px;display:flex;flex-direction:column;justify-content:center;position:relative;transition:background .7s}
+.preview-tag{height:6px;width:70px;border-radius:10px;margin-bottom:14px;opacity:.5;transition:background .7s}
+.preview-h1{height:18px;width:65%;border-radius:2px;margin-bottom:10px;transition:background .7s}
+.preview-h2{height:12px;width:45%;border-radius:2px;margin-bottom:22px;opacity:.5;transition:background .7s}
+.preview-body-lines{display:flex;flex-direction:column;gap:6px;margin-bottom:24px}
+.preview-body-line{height:6px;border-radius:2px;opacity:.25;transition:background .7s}
+.preview-cta{height:28px;width:100px;border-radius:2px;transition:background .7s}
+.preview-accent-box{position:absolute;right:36px;bottom:36px;width:48px;height:64px;border-radius:2px;transition:background .7s}
+.usage-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.usage-card{padding:44px;border-right:1px solid var(--line);transition:background .2s}
+.usage-card:last-child{border-right:none}
+.usage-card:hover{background:var(--bg2)}
+.usage-icon{font-size:18px;margin-bottom:18px}
+.usage-title{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.usage-desc{font-size:15px;font-weight:300;line-height:1.7;color:var(--fg2)}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.97);z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+.loading-overlay.active{display:flex}
+.loading-text{font-size:clamp(32px,5vw,56px);font-weight:300;font-style:italic;animation:pulse 2s infinite}
+.loading-bar{width:140px;height:1px;background:var(--line2);position:relative;overflow:hidden}
+.loading-bar::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--fg2);animation:slideBar 1s infinite}
+.loading-sub{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--fg3)}
+.copy-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--fg);color:var(--bg);font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:10px 20px;border-radius:2px;opacity:0;transition:all .3s;pointer-events:none;z-index:999}
+.copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@keyframes pulse{0%,100%{opacity:.15}50%{opacity:1}}
+@keyframes slideBar{0%{left:-100%}100%{left:100%}}
+@media(max-width:768px){
+  .section,.palette-header,.export-section,.preview-section{padding-left:24px;padding-right:24px}
+  .swatches-container{grid-template-columns:repeat(3,1fr)}
+  .usage-grid{grid-template-columns:1fr}
+  .usage-card{border-right:none;border-bottom:1px solid var(--line)}
+  .palette-header{grid-template-columns:1fr}
+  .preview-accent-box{display:none}
+}
+</style>
+</head>
+<body>
+
+<section class="section" id="experience">
+  <div class="section-header">
+    <h1 class="hero-title">Tell me who you are.<br><em>I'll tell you your colors.</em></h1>
+    <p class="hero-sub">Answer four questions about your creative identity. The AI reads between the lines and returns a color palette that is unmistakably, entirely yours.</p>
+  </div>
+
+  <div class="question-block">
+    <div class="q-num">01</div>
+    <div>
+      <p class="q-text">What feeling do you most want to create in your work?</p>
+      <div class="options-row" id="q1">
+        <button class="option-pill" onclick="selectOption('q1',this,'Calm and serene')">Calm and serene</button>
+        <button class="option-pill" onclick="selectOption('q1',this,'Bold and fearless')">Bold and fearless</button>
+        <button class="option-pill" onclick="selectOption('q1',this,'Warm and inviting')">Warm and inviting</button>
+        <button class="option-pill" onclick="selectOption('q1',this,'Cold and precise')">Cold and precise</button>
+        <button class="option-pill" onclick="selectOption('q1',this,'Mysterious and deep')">Mysterious and deep</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="q-num">02</div>
+    <div>
+      <p class="q-text">Which environment sparks your creativity most?</p>
+      <div class="options-row" id="q2">
+        <button class="option-pill" onclick="selectOption('q2',this,'A sunlit studio')">A sunlit studio</button>
+        <button class="option-pill" onclick="selectOption('q2',this,'A city at night')">A city at night</button>
+        <button class="option-pill" onclick="selectOption('q2',this,'The open ocean')">The open ocean</button>
+        <button class="option-pill" onclick="selectOption('q2',this,'A forest at dawn')">A forest at dawn</button>
+        <button class="option-pill" onclick="selectOption('q2',this,'An empty gallery')">An empty gallery</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="q-num">03</div>
+    <div>
+      <p class="q-text">How would you describe your design approach?</p>
+      <div class="options-row" id="q3">
+        <button class="option-pill" onclick="selectOption('q3',this,'Precise and structured')">Precise and structured</button>
+        <button class="option-pill" onclick="selectOption('q3',this,'Expressive and fluid')">Expressive and fluid</button>
+        <button class="option-pill" onclick="selectOption('q3',this,'Minimal and considered')">Minimal and considered</button>
+        <button class="option-pill" onclick="selectOption('q3',this,'Experimental and raw')">Experimental and raw</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="q-num">04</div>
+    <div>
+      <p class="q-text">One word you want users to feel when they see your work.</p>
+      <input type="text" class="open-input" id="q4" placeholder="e.g. trust, wonder, clarity..." maxlength="40">
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="generate-btn" id="gen-btn" onclick="generatePalette()">
+      <span>Generate My Palette</span>
+      <span>&#8594;</span>
+    </button>
+  </div>
+</section>
+
+<div id="result-area">
+  <div class="palette-header">
+    <div class="palette-name" id="palette-name"></div>
+    <div>
+      <div class="palette-subtitle" id="palette-subtitle"></div>
+      <p class="palette-description" id="palette-description"></p>
+    </div>
+  </div>
+  <div class="swatches-container" id="swatches"></div>
+  <div class="export-section">
+    <span class="export-label">Export</span>
+    <button class="export-btn" onclick="exportCSS()">CSS Variables</button>
+    <button class="export-btn" onclick="exportSVG()">SVG Card</button>
+    <button class="export-btn" onclick="copyAllHex()">Copy All Hex</button>
+    <button class="export-btn" onclick="exportJSON()">JSON</button>
+  </div>
+  <div class="preview-section">
+    <div class="preview-label">Live Brand Preview</div>
+    <div class="live-preview">
+      <div class="preview-sidebar" id="ps">
+        <div>
+          <div class="preview-logo-line" id="pll"></div>
+          <div class="preview-logo-sub" id="pls"></div>
+        </div>
+        <div class="preview-nav">
+          <div class="preview-nav-item active" id="pn1"></div>
+          <div class="preview-nav-item" id="pn2"></div>
+          <div class="preview-nav-item" id="pn3"></div>
+          <div class="preview-nav-item" id="pn4"></div>
+        </div>
+      </div>
+      <div class="preview-main" id="pm">
+        <div class="preview-tag" id="ptag"></div>
+        <div class="preview-h1" id="ph1"></div>
+        <div class="preview-h2" id="ph2"></div>
+        <div class="preview-body-lines">
+          <div class="preview-body-line" id="pb1" style="width:82%"></div>
+          <div class="preview-body-line" id="pb2" style="width:68%"></div>
+          <div class="preview-body-line" id="pb3" style="width:76%"></div>
+        </div>
+        <div class="preview-cta" id="pc"></div>
+        <div class="preview-accent-box" id="pab"></div>
+      </div>
+    </div>
+  </div>
+  <div class="usage-grid" id="usage-grid"></div>
+</div>
+
+<div class="loading-overlay" id="loading">
+  <div class="loading-text">Reading you...</div>
+  <div class="loading-bar"></div>
+  <div class="loading-sub">Crafting your palette</div>
+</div>
+
+<div class="copy-toast" id="toast"></div>
+
+<script>
+var currentPalette = null;
+var answers = {q1:'',q2:'',q3:'',q4:''};
+
+function selectOption(qid, el, value) {
+  var pills = document.querySelectorAll('#' + qid + ' .option-pill');
+  for (var i = 0; i < pills.length; i++) {
+    pills[i].classList.remove('selected');
+  }
+  el.classList.add('selected');
+  answers[qid] = value;
+}
+
+document.getElementById('q4').addEventListener('input', function(e) {
+  answers.q4 = e.target.value;
+});
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+
+function copySwatch(hex) {
+  navigator.clipboard.writeText(hex).then(function() { showToast(hex + ' copied'); });
+}
+
+function applyPreview(colors) {
+  var c = colors.map(function(x) { return x.hex; });
+  document.getElementById('ps').style.background = c[0];
+  document.getElementById('pll').style.background = c[2];
+  document.getElementById('pls').style.background = c[2];
+  var navItems = ['pn1','pn2','pn3','pn4'];
+  for (var i = 0; i < navItems.length; i++) {
+    document.getElementById(navItems[i]).style.background = i === 0 ? c[2] : c[1];
+  }
+  document.getElementById('pm').style.background = c[4];
+  document.getElementById('ptag').style.background = c[2];
+  document.getElementById('ph1').style.background = c[0];
+  document.getElementById('ph2').style.background = c[0];
+  var bodyLines = ['pb1','pb2','pb3'];
+  for (var j = 0; j < bodyLines.length; j++) {
+    document.getElementById(bodyLines[j]).style.background = c[0];
+  }
+  document.getElementById('pc').style.background = c[2];
+  document.getElementById('pab').style.background = c[3];
+}
+
+function dl(content, filename, mime) {
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], {type: mime}));
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function slug(s) { return s.toLowerCase().replace(/\s+/g,'-'); }
+
+function exportCSS() {
+  if (!currentPalette) return;
+  var s = slug(currentPalette.paletteName);
+  var vars = currentPalette.colors.map(function(c,i) {
+    return '  --' + s + '-' + (i+1) + ': ' + c.hex.toUpperCase() + ';';
+  }).join('\n');
+  dl(':root {\n' + vars + '\n}\n', s + '.css', 'text/css');
+  showToast('CSS downloaded');
+}
+
+function exportSVG() {
+  if (!currentPalette) return;
+  var W = 1000, H = 420, sw = W / 5;
+  var rects = currentPalette.colors.map(function(c,i) {
+    var x = i * sw;
+    return '<rect x="'+x+'" y="0" width="'+sw+'" height="'+(H*.6)+'" fill="'+c.hex+'"/><text x="'+(x+16)+'" y="'+(H*.6+28)+'" font-family="sans-serif" font-size="13" fill="#1a1a1a">'+c.name+'</text><text x="'+(x+16)+'" y="'+(H*.6+46)+'" font-family="monospace" font-size="11" fill="#555">'+c.hex.toUpperCase()+'</text>';
+  }).join('');
+  dl('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'"><rect width="'+W+'" height="'+H+'" fill="#f7f6f4"/>'+rects+'</svg>', slug(currentPalette.paletteName)+'.svg', 'image/svg+xml');
+  showToast('SVG downloaded');
+}
+
+function copyAllHex() {
+  if (!currentPalette) return;
+  navigator.clipboard.writeText(currentPalette.colors.map(function(c) { return c.hex.toUpperCase(); }).join(', ')).then(function() { showToast('All hex values copied'); });
+}
+
+function exportJSON() {
+  if (!currentPalette) return;
+  dl(JSON.stringify(currentPalette, null, 2), slug(currentPalette.paletteName)+'.json', 'application/json');
+  showToast('JSON downloaded');
+}
+
+function generatePalette() {
+  if (!answers.q1 || !answers.q2 || !answers.q3) {
+    showToast('Please answer the first 3 questions');
+    return;
+  }
+  document.getElementById('gen-btn').disabled = true;
+  document.getElementById('loading').classList.add('active');
+
+  var prompt = 'You are a color theorist. Generate a 5-color palette for a Senior UX Designer.\n\nProfile:\n- Feeling: ' + answers.q1 + '\n- Environment: ' + answers.q2 + '\n- Approach: ' + answers.q3 + '\n- Emotion: ' + (answers.q4 || 'not specified') + '\n\nRespond with ONLY a JSON object, no explanation, no markdown, no code blocks:\n{"paletteName":"NAME IN CAPS","subtitle":"short poetic phrase","description":"2 sentences in second person","colors":[{"hex":"#XXXXXX","name":"color name","role":"Primary"},{"hex":"#XXXXXX","name":"color name","role":"Secondary"},{"hex":"#XXXXXX","name":"color name","role":"Accent"},{"hex":"#XXXXXX","name":"color name","role":"Base"},{"hex":"#XXXXXX","name":"color name","role":"Highlight"}],"usages":[{"icon":"◻","title":"Dashboard and Data Viz","desc":"one sentence"},{"icon":"◈","title":"UX and Product Design","desc":"one sentence"},{"icon":"✦","title":"Brand and Portfolio","desc":"one sentence"}]}';
+
+  fetch('https://muddy-forest-96c8.cathycavander.workers.dev/', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({prompt: prompt})
+  })
+  .then(function(res) {
+    return res.json();
+  })
+  .then(function(data) {
+    console.log('Worker response:', JSON.stringify(data));
+    if (data.error) {
+      showToast('Error: ' + data.error);
+      return;
+    }
+    if (!data.colors) {
+      showToast('Bad response - check console');
+      return;
+    }
+    currentPalette = data;
+    renderPalette(data);
+  })
+  .catch(function(err) {
+    console.error('Fetch error:', err);
+    showToast('Connection error - try again');
+  })
+  .finally(function() {
+    document.getElementById('loading').classList.remove('active');
+    document.getElementById('gen-btn').disabled = false;
+  });
+}
+
+function renderPalette(palette) {
+  document.getElementById('palette-name').textContent = palette.paletteName;
+  document.getElementById('palette-subtitle').textContent = palette.subtitle;
+  document.getElementById('palette-description').textContent = palette.description;
+
+  var sc = document.getElementById('swatches');
+  sc.innerHTML = '';
+  palette.colors.forEach(function(color) {
+    var s = document.createElement('div');
+    s.className = 'swatch';
+    s.innerHTML = '<div class="swatch-color" style="background:' + color.hex + '"></div><div class="swatch-info"><span class="swatch-role">' + color.role + '</span><span class="swatch-name">' + color.name + '</span><span class="swatch-hex">' + color.hex.toUpperCase() + '</span></div>';
+    s.addEventListener('click', function() { copySwatch(color.hex.toUpperCase()); });
+    sc.appendChild(s);
+  });
+
+  applyPreview(palette.colors);
+
+  var ug = document.getElementById('usage-grid');
+  ug.innerHTML = '';
+  palette.usages.forEach(function(u) {
+    ug.innerHTML += '<div class="usage-card"><div class="usage-icon">' + u.icon + '</div><div class="usage-title">' + u.title + '</div><p class="usage-desc">' + u.desc + '</p></div>';
+  });
+
+  document.getElementById('result-area').style.display = 'block';
+  document.getElementById('result-area').scrollIntoView({behavior:'smooth', block:'start'});
+}
+</script>
+</body>
+</html>
