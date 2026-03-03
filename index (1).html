@@ -341,6 +341,11 @@ function generatePalette() {
 }
 
 function renderPalette(palette) {
+  console.log('palette received:', JSON.stringify(palette));
+  if (!palette || !palette.colors) {
+    showToast('Error: ' + JSON.stringify(palette));
+    return;
+  }
   document.getElementById('palette-name').textContent = palette.paletteName;
   document.getElementById('palette-subtitle').textContent = palette.subtitle;
   document.getElementById('palette-description').textContent = palette.description;
