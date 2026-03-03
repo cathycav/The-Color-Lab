@@ -345,9 +345,8 @@ function generatePalette() {
   })
   .then(function(res) { return res.json(); })
   .then(function(data) {
-    console.log("Response:", JSON.stringify(data));
     if (data.error) { showToast("Error: " + data.error); return; }
-    if (!data.colors) { showToast("Unexpected response - see console"); return; }
+    if (!data.colors) { showToast("Unexpected response - please try again"); return; }
     currentPalette = data;
     renderPalette(data);
   })
