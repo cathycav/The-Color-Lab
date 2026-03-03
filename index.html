@@ -26,9 +26,21 @@ export default {
       }),
     });
 
+    // Return raw Anthropic response for debugging
     const data = await response.json();
+    console.log("Anthropic status:", response.status);
+    console.log("Anthropic response:", JSON.stringify(data));
 
-    // Extract the JSON text from Claude's response and parse it
+    if (!response.ok) {
+      return new Response(JSON.stringify({ error: data.error?.message || "API error", detail: data }), {
+        status: 200, // return 200 so CORS doesn't block it
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "https://cathycav.github.io",
+        },
+      });
+    }
+
     const text = data.content[0].text;
     let palette;
     try {
