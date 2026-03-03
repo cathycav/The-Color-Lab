@@ -3,18 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Color Lab — Cathy Cavander</title>
+<title>The Color Lab</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#ffffff;--bg2:#f7f6f4;--fg:#1a1a1a;--fg2:#6b6b6b;--fg3:#a8a8a8;--line:#e8e6e2;--line2:#d0cdc8;--pill:#f0ede8;--pill-text:#666;--sans:'Poppins',sans-serif;--mono:'DM Mono',monospace}
-html{scroll-behavior:smooth}
+:root{--bg:#fff;--bg2:#f7f6f4;--fg:#1a1a1a;--fg2:#6b6b6b;--fg3:#a8a8a8;--line:#e8e6e2;--line2:#d0cdc8;--pill:#f0ede8;--pill-text:#666;--sans:'Poppins',sans-serif;--mono:'DM Mono',monospace}
 body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100vh;-webkit-font-smoothing:antialiased}
 .section{padding:80px 10%;border-bottom:1px solid var(--line)}
-.section-header{margin-bottom:32px}
-.hero-title{font-size:clamp(36px,5vw,60px);font-weight:300;line-height:1.1;margin-bottom:0}
+.hero-title{font-size:clamp(36px,5vw,60px);font-weight:300;line-height:1.1}
 .hero-title em{font-style:italic;color:var(--fg2)}
-.hero-sub{font-size:15px;font-weight:300;line-height:1.75;color:var(--fg2);margin-bottom:56px;margin-top:16px;max-width:560px}
+.hero-sub{font-size:15px;font-weight:300;line-height:1.75;color:var(--fg2);margin:16px 0 56px;max-width:560px}
 .question-block{display:grid;grid-template-columns:72px 1fr;border-top:1px solid var(--line);padding:40px 0;align-items:start}
 .question-block:last-child{border-bottom:1px solid var(--line)}
 .q-num{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--fg3);text-transform:uppercase;padding-top:4px}
@@ -28,8 +26,8 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100
 .open-input:focus{border-color:var(--fg2)}
 .btn-row{margin-top:64px}
 .generate-btn{display:inline-flex;align-items:center;gap:14px;background:var(--fg);color:var(--bg);border:none;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:18px 44px;cursor:pointer;border-radius:2px;transition:all .25s}
-.generate-btn:hover{opacity:.85;transform:translateY(-1px)}
-.generate-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.generate-btn:hover{opacity:.85}
+.generate-btn:disabled{opacity:.35;cursor:not-allowed}
 #result-area{display:none}
 .palette-header{padding:80px 10% 60px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end}
 .palette-name{font-size:clamp(40px,6vw,80px);font-weight:300;line-height:.95}
@@ -94,11 +92,9 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100
 </head>
 <body>
 
-<section class="section" id="experience">
-  <div class="section-header">
-    <h1 class="hero-title">Tell me who you are.<br><em>I'll tell you your colors.</em></h1>
-    <p class="hero-sub">Answer four questions about your creative identity. The AI reads between the lines and returns a color palette that is unmistakably, entirely yours.</p>
-  </div>
+<section class="section">
+  <h1 class="hero-title">Tell me who you are.<br><em>I will tell you your colors.</em></h1>
+  <p class="hero-sub">Answer four questions about your creative identity. The AI reads between the lines and returns a color palette that is unmistakably, entirely yours.</p>
 
   <div class="question-block">
     <div class="q-num">01</div>
@@ -145,7 +141,7 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100
     <div class="q-num">04</div>
     <div>
       <p class="q-text">One word you want users to feel when they see your work.</p>
-      <input type="text" class="open-input" id="q4" placeholder="e.g. trust, wonder, clarity..." maxlength="40">
+      <input type="text" class="open-input" id="q4" placeholder="trust, wonder, clarity..." maxlength="40">
     </div>
   </div>
 
@@ -185,7 +181,6 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100
           <div class="preview-nav-item active" id="pn1"></div>
           <div class="preview-nav-item" id="pn2"></div>
           <div class="preview-nav-item" id="pn3"></div>
-          <div class="preview-nav-item" id="pn4"></div>
         </div>
       </div>
       <div class="preview-main" id="pm">
@@ -210,60 +205,54 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100
   <div class="loading-bar"></div>
   <div class="loading-sub">Crafting your palette</div>
 </div>
-
 <div class="copy-toast" id="toast"></div>
 
 <script>
+var WORKER = "https://muddy-forest-96c8.cathycavander.workers.dev/";
 var currentPalette = null;
-var answers = {q1:'',q2:'',q3:'',q4:''};
+var answers = {q1:"",q2:"",q3:"",q4:""};
 
 function selectOption(qid, el, value) {
-  var pills = document.querySelectorAll('#' + qid + ' .option-pill');
-  for (var i = 0; i < pills.length; i++) {
-    pills[i].classList.remove('selected');
-  }
-  el.classList.add('selected');
+  var pills = document.querySelectorAll("#" + qid + " .option-pill");
+  for (var i = 0; i < pills.length; i++) { pills[i].classList.remove("selected"); }
+  el.classList.add("selected");
   answers[qid] = value;
 }
 
-document.getElementById('q4').addEventListener('input', function(e) {
-  answers.q4 = e.target.value;
-});
+document.getElementById("q4").addEventListener("input", function(e) { answers.q4 = e.target.value; });
 
 function showToast(msg) {
-  var t = document.getElementById('toast');
+  var t = document.getElementById("toast");
   t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 3000);
+  t.classList.add("show");
+  setTimeout(function() { t.classList.remove("show"); }, 3000);
 }
 
 function copySwatch(hex) {
-  navigator.clipboard.writeText(hex).then(function() { showToast(hex + ' copied'); });
+  navigator.clipboard.writeText(hex).then(function() { showToast(hex + " copied"); });
 }
 
 function applyPreview(colors) {
   var c = colors.map(function(x) { return x.hex; });
-  document.getElementById('ps').style.background = c[0];
-  document.getElementById('pll').style.background = c[2];
-  document.getElementById('pls').style.background = c[2];
-  var navItems = ['pn1','pn2','pn3','pn4'];
-  for (var i = 0; i < navItems.length; i++) {
-    document.getElementById(navItems[i]).style.background = i === 0 ? c[2] : c[1];
+  document.getElementById("ps").style.background = c[0];
+  document.getElementById("pll").style.background = c[2];
+  document.getElementById("pls").style.background = c[2];
+  var nav = ["pn1","pn2","pn3"];
+  for (var i = 0; i < nav.length; i++) {
+    document.getElementById(nav[i]).style.background = i === 0 ? c[2] : c[1];
   }
-  document.getElementById('pm').style.background = c[4];
-  document.getElementById('ptag').style.background = c[2];
-  document.getElementById('ph1').style.background = c[0];
-  document.getElementById('ph2').style.background = c[0];
-  var bodyLines = ['pb1','pb2','pb3'];
-  for (var j = 0; j < bodyLines.length; j++) {
-    document.getElementById(bodyLines[j]).style.background = c[0];
-  }
-  document.getElementById('pc').style.background = c[2];
-  document.getElementById('pab').style.background = c[3];
+  document.getElementById("pm").style.background = c[4];
+  document.getElementById("ptag").style.background = c[2];
+  document.getElementById("ph1").style.background = c[0];
+  document.getElementById("ph2").style.background = c[0];
+  var bl = ["pb1","pb2","pb3"];
+  for (var j = 0; j < bl.length; j++) { document.getElementById(bl[j]).style.background = c[0]; }
+  document.getElementById("pc").style.background = c[2];
+  document.getElementById("pab").style.background = c[3];
 }
 
 function dl(content, filename, mime) {
-  var a = document.createElement('a');
+  var a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([content], {type: mime}));
   a.download = filename;
   document.body.appendChild(a);
@@ -271,106 +260,141 @@ function dl(content, filename, mime) {
   document.body.removeChild(a);
 }
 
-function slug(s) { return s.toLowerCase().replace(/\s+/g,'-'); }
+function slug(s) { return s.toLowerCase().replace(/\s+/g, "-"); }
 
 function exportCSS() {
   if (!currentPalette) return;
   var s = slug(currentPalette.paletteName);
-  var vars = currentPalette.colors.map(function(c,i) {
-    return '  --' + s + '-' + (i+1) + ': ' + c.hex.toUpperCase() + ';';
-  }).join('\n');
-  dl(':root {\n' + vars + '\n}\n', s + '.css', 'text/css');
-  showToast('CSS downloaded');
+  var vars = currentPalette.colors.map(function(c, i) {
+    return "  --" + s + "-" + (i+1) + ": " + c.hex.toUpperCase() + ";";
+  }).join("\n");
+  dl(":root {\n" + vars + "\n}\n", s + ".css", "text/css");
+  showToast("CSS downloaded");
 }
 
 function exportSVG() {
   if (!currentPalette) return;
   var W = 1000, H = 420, sw = W / 5;
-  var rects = currentPalette.colors.map(function(c,i) {
+  var rects = currentPalette.colors.map(function(c, i) {
     var x = i * sw;
-    return '<rect x="'+x+'" y="0" width="'+sw+'" height="'+(H*.6)+'" fill="'+c.hex+'"/><text x="'+(x+16)+'" y="'+(H*.6+28)+'" font-family="sans-serif" font-size="13" fill="#1a1a1a">'+c.name+'</text><text x="'+(x+16)+'" y="'+(H*.6+46)+'" font-family="monospace" font-size="11" fill="#555">'+c.hex.toUpperCase()+'</text>';
-  }).join('');
-  dl('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'"><rect width="'+W+'" height="'+H+'" fill="#f7f6f4"/>'+rects+'</svg>', slug(currentPalette.paletteName)+'.svg', 'image/svg+xml');
-  showToast('SVG downloaded');
+    return "<rect x='" + x + "' y='0' width='" + sw + "' height='" + (H * 0.6) + "' fill='" + c.hex + "'/>" +
+      "<text x='" + (x + 16) + "' y='" + (H * 0.6 + 28) + "' font-family='sans-serif' font-size='13' fill='#1a1a1a'>" + c.name + "</text>" +
+      "<text x='" + (x + 16) + "' y='" + (H * 0.6 + 46) + "' font-family='monospace' font-size='11' fill='#555'>" + c.hex.toUpperCase() + "</text>";
+  }).join("");
+  dl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 " + W + " " + H + "'><rect width='" + W + "' height='" + H + "' fill='#f7f6f4'/>" + rects + "</svg>",
+    slug(currentPalette.paletteName) + ".svg", "image/svg+xml");
+  showToast("SVG downloaded");
 }
 
 function copyAllHex() {
   if (!currentPalette) return;
-  navigator.clipboard.writeText(currentPalette.colors.map(function(c) { return c.hex.toUpperCase(); }).join(', ')).then(function() { showToast('All hex values copied'); });
+  navigator.clipboard.writeText(currentPalette.colors.map(function(c) { return c.hex.toUpperCase(); }).join(", "))
+    .then(function() { showToast("All hex values copied"); });
 }
 
 function exportJSON() {
   if (!currentPalette) return;
-  dl(JSON.stringify(currentPalette, null, 2), slug(currentPalette.paletteName)+'.json', 'application/json');
-  showToast('JSON downloaded');
+  dl(JSON.stringify(currentPalette, null, 2), slug(currentPalette.paletteName) + ".json", "application/json");
+  showToast("JSON downloaded");
+}
+
+function buildPrompt() {
+  var lines = [
+    "You are a color theorist. Generate a 5-color palette for a Senior UX Designer.",
+    "",
+    "Profile:",
+    "- Feeling: " + answers.q1,
+    "- Environment: " + answers.q2,
+    "- Approach: " + answers.q3,
+    "- Emotion: " + (answers.q4 || "not specified"),
+    "",
+    "Return ONLY a raw JSON object with no markdown, no code blocks, no explanation:",
+    "{",
+    '  "paletteName": "TWO OR THREE WORDS IN CAPS",',
+    '  "subtitle": "short poetic phrase",',
+    '  "description": "Two sentences in second person.",',
+    '  "colors": [',
+    '    {"hex": "#XXXXXX", "name": "name", "role": "Primary"},',
+    '    {"hex": "#XXXXXX", "name": "name", "role": "Secondary"},',
+    '    {"hex": "#XXXXXX", "name": "name", "role": "Accent"},',
+    '    {"hex": "#XXXXXX", "name": "name", "role": "Base"},',
+    '    {"hex": "#XXXXXX", "name": "name", "role": "Highlight"}',
+    "  ],",
+    '  "usages": [',
+    '    {"icon": "O", "title": "Dashboard and Data Viz", "desc": "One sentence."},',
+    '    {"icon": "O", "title": "UX and Product Design", "desc": "One sentence."},',
+    '    {"icon": "O", "title": "Brand and Portfolio", "desc": "One sentence."}',
+    "  ]",
+    "}"
+  ];
+  return lines.join("\n");
 }
 
 function generatePalette() {
   if (!answers.q1 || !answers.q2 || !answers.q3) {
-    showToast('Please answer the first 3 questions');
+    showToast("Please answer the first 3 questions");
     return;
   }
-  document.getElementById('gen-btn').disabled = true;
-  document.getElementById('loading').classList.add('active');
+  document.getElementById("gen-btn").disabled = true;
+  document.getElementById("loading").classList.add("active");
 
-  var prompt = 'You are a color theorist. Generate a 5-color palette for a Senior UX Designer.\n\nProfile:\n- Feeling: ' + answers.q1 + '\n- Environment: ' + answers.q2 + '\n- Approach: ' + answers.q3 + '\n- Emotion: ' + (answers.q4 || 'not specified') + '\n\nRespond with ONLY a JSON object, no explanation, no markdown, no code blocks:\n{"paletteName":"NAME IN CAPS","subtitle":"short poetic phrase","description":"2 sentences in second person","colors":[{"hex":"#XXXXXX","name":"color name","role":"Primary"},{"hex":"#XXXXXX","name":"color name","role":"Secondary"},{"hex":"#XXXXXX","name":"color name","role":"Accent"},{"hex":"#XXXXXX","name":"color name","role":"Base"},{"hex":"#XXXXXX","name":"color name","role":"Highlight"}],"usages":[{"icon":"◻","title":"Dashboard and Data Viz","desc":"one sentence"},{"icon":"◈","title":"UX and Product Design","desc":"one sentence"},{"icon":"✦","title":"Brand and Portfolio","desc":"one sentence"}]}';
-
-  fetch('https://muddy-forest-96c8.cathycavander.workers.dev/', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({prompt: prompt})
+  fetch(WORKER, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({prompt: buildPrompt()})
   })
-  .then(function(res) {
-    return res.json();
-  })
+  .then(function(res) { return res.json(); })
   .then(function(data) {
-    console.log('Worker response:', JSON.stringify(data));
-    if (data.error) {
-      showToast('Error: ' + data.error);
-      return;
-    }
-    if (!data.colors) {
-      showToast('Bad response - check console');
-      return;
-    }
+    console.log("Response:", JSON.stringify(data));
+    if (data.error) { showToast("Error: " + data.error); return; }
+    if (!data.colors) { showToast("Unexpected response - see console"); return; }
     currentPalette = data;
     renderPalette(data);
   })
   .catch(function(err) {
-    console.error('Fetch error:', err);
-    showToast('Connection error - try again');
+    console.error(err);
+    showToast("Connection error - please try again");
   })
   .finally(function() {
-    document.getElementById('loading').classList.remove('active');
-    document.getElementById('gen-btn').disabled = false;
+    document.getElementById("loading").classList.remove("active");
+    document.getElementById("gen-btn").disabled = false;
   });
 }
 
 function renderPalette(palette) {
-  document.getElementById('palette-name').textContent = palette.paletteName;
-  document.getElementById('palette-subtitle').textContent = palette.subtitle;
-  document.getElementById('palette-description').textContent = palette.description;
+  document.getElementById("palette-name").textContent = palette.paletteName;
+  document.getElementById("palette-subtitle").textContent = palette.subtitle;
+  document.getElementById("palette-description").textContent = palette.description;
 
-  var sc = document.getElementById('swatches');
-  sc.innerHTML = '';
+  var sc = document.getElementById("swatches");
+  sc.innerHTML = "";
   palette.colors.forEach(function(color) {
-    var s = document.createElement('div');
-    s.className = 'swatch';
-    s.innerHTML = '<div class="swatch-color" style="background:' + color.hex + '"></div><div class="swatch-info"><span class="swatch-role">' + color.role + '</span><span class="swatch-name">' + color.name + '</span><span class="swatch-hex">' + color.hex.toUpperCase() + '</span></div>';
-    s.addEventListener('click', function() { copySwatch(color.hex.toUpperCase()); });
+    var s = document.createElement("div");
+    s.className = "swatch";
+    s.innerHTML = "<div class='swatch-color' style='background:" + color.hex + "'></div>" +
+      "<div class='swatch-info'>" +
+      "<span class='swatch-role'>" + color.role + "</span>" +
+      "<span class='swatch-name'>" + color.name + "</span>" +
+      "<span class='swatch-hex'>" + color.hex.toUpperCase() + "</span></div>";
+    s.addEventListener("click", function() { copySwatch(color.hex.toUpperCase()); });
     sc.appendChild(s);
   });
 
   applyPreview(palette.colors);
 
-  var ug = document.getElementById('usage-grid');
-  ug.innerHTML = '';
+  var ug = document.getElementById("usage-grid");
+  ug.innerHTML = "";
   palette.usages.forEach(function(u) {
-    ug.innerHTML += '<div class="usage-card"><div class="usage-icon">' + u.icon + '</div><div class="usage-title">' + u.title + '</div><p class="usage-desc">' + u.desc + '</p></div>';
+    var card = document.createElement("div");
+    card.className = "usage-card";
+    card.innerHTML = "<div class='usage-icon'>" + u.icon + "</div>" +
+      "<div class='usage-title'>" + u.title + "</div>" +
+      "<p class='usage-desc'>" + u.desc + "</p>";
+    ug.appendChild(card);
   });
 
-  document.getElementById('result-area').style.display = 'block';
-  document.getElementById('result-area').scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById("result-area").style.display = "block";
+  document.getElementById("result-area").scrollIntoView({behavior:"smooth", block:"start"});
 }
 </script>
 </body>
