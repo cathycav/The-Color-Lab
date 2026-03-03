@@ -298,18 +298,9 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:32p
 <script>
 let currentPalette = null;
 const answers = {q1:'',q2:'',q3:'',q4:''};
-let isDark = false;
 
-function toggleTheme() {
-  isDark = !isDark;
-  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-  document.getElementById('toggle-icon').textContent = isDark ? '☀' : '☾';
-  document.getElementById('toggle-label').textContent = isDark ? 'Light' : 'Dark';
-}
 
-window.addEventListener('scroll', () => {
-  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
-});
+
 
 function selectOption(qid, el, value) {
   document.querySelectorAll('#' + qid + ' .option-pill').forEach(p => p.classList.remove('selected'));
