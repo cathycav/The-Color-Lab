@@ -7,27 +7,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#fff;--bg2:#f7f6f4;--fg:#1a1a1a;--fg2:#6b6b6b;--fg3:#a8a8a8;
-  --line:#e8e6e2;--line2:#d0cdc8;--pill:#f0ede8;--pill-text:#666;
-  --sans:'Poppins',sans-serif;--mono:'DM Mono',monospace
-}
+:root{--bg:#fff;--bg2:#f7f6f4;--fg:#1a1a1a;--fg2:#6b6b6b;--fg3:#a8a8a8;--line:#e8e6e2;--line2:#d0cdc8;--pill:#f0ede8;--pill-text:#666;--sans:'Poppins',sans-serif;--mono:'DM Mono',monospace}
 body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100vh;-webkit-font-smoothing:antialiased}
-
-/* API KEY BAR */
-.api-bar{background:var(--bg2);border-bottom:1px solid var(--line);padding:14px 10%;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.api-bar label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg3);white-space:nowrap}
-.api-input{flex:1;min-width:260px;background:transparent;border:none;border-bottom:1px solid var(--line2);color:var(--fg);font-family:var(--mono);font-size:12px;padding:4px 0;outline:none}
-.api-input:focus{border-color:var(--fg2)}
-.api-note{font-size:11px;color:var(--fg3);font-family:var(--mono)}
-
-/* LAYOUT */
 .section{padding:80px 10%;border-bottom:1px solid var(--line)}
 .hero-title{font-size:clamp(36px,5vw,60px);font-weight:300;line-height:1.1}
 .hero-title em{font-style:italic;color:var(--fg2)}
 .hero-sub{font-size:15px;font-weight:300;line-height:1.75;color:var(--fg2);margin:16px 0 56px;max-width:560px}
-
-/* QUESTIONS */
 .question-block{display:grid;grid-template-columns:72px 1fr;border-top:1px solid var(--line);padding:40px 0;align-items:start}
 .question-block:last-child{border-bottom:1px solid var(--line)}
 .q-num{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--fg3);text-transform:uppercase;padding-top:4px}
@@ -39,21 +24,15 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100
 .open-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--line2);color:var(--fg);font-family:var(--sans);font-size:20px;font-weight:300;padding:8px 0;outline:none}
 .open-input::placeholder{color:var(--fg3)}
 .open-input:focus{border-color:var(--fg2)}
-
-/* BUTTON */
 .btn-row{margin-top:64px}
 .generate-btn{display:inline-flex;align-items:center;gap:14px;background:var(--fg);color:var(--bg);border:none;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:18px 44px;cursor:pointer;border-radius:2px;transition:all .25s}
 .generate-btn:hover{opacity:.85}
 .generate-btn:disabled{opacity:.35;cursor:not-allowed}
-
-/* RESULT */
 #result-area{display:none}
 .palette-header{padding:80px 10% 60px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end}
 .palette-name{font-size:clamp(40px,6vw,80px);font-weight:300;line-height:.95}
 .palette-subtitle{font-style:italic;font-size:17px;font-weight:300;color:var(--fg2);margin-bottom:16px}
 .palette-description{font-size:14px;font-weight:300;line-height:1.75;color:var(--fg2)}
-
-/* SWATCHES */
 .swatches-container{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--line)}
 .swatch{aspect-ratio:3/4;position:relative;cursor:pointer;overflow:hidden}
 .swatch:hover{filter:brightness(1.05)}
@@ -63,14 +42,10 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100
 .swatch-role{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.6);text-transform:uppercase;display:block;margin-bottom:3px}
 .swatch-name{font-size:13px;font-weight:300;color:rgba(255,255,255,.95);display:block;margin-bottom:2px}
 .swatch-hex{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.65)}
-
-/* EXPORT */
 .export-section{padding:28px 10%;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .export-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg3);margin-right:8px}
 .export-btn{background:var(--bg2);border:1px solid var(--line);color:var(--fg2);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:9px 16px;cursor:pointer;border-radius:2px;transition:all .2s}
 .export-btn:hover{border-color:var(--line2);color:var(--fg)}
-
-/* PREVIEW */
 .preview-section{padding:60px 10%;border-bottom:1px solid var(--line)}
 .preview-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg3);margin-bottom:24px}
 .live-preview{border:1px solid var(--line);overflow:hidden;height:280px;border-radius:3px;display:flex}
@@ -88,8 +63,6 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100
 .preview-body-line{height:6px;border-radius:2px;opacity:.25;transition:background .7s}
 .preview-cta{height:28px;width:100px;border-radius:2px;transition:background .7s}
 .preview-accent-box{position:absolute;right:36px;bottom:36px;width:48px;height:64px;border-radius:2px;transition:background .7s}
-
-/* USAGE */
 .usage-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
 .usage-card{padding:44px;border-right:1px solid var(--line);transition:background .2s}
 .usage-card:last-child{border-right:none}
@@ -97,25 +70,18 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100
 .usage-icon{font-size:18px;margin-bottom:18px}
 .usage-title{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
 .usage-desc{font-size:15px;font-weight:300;line-height:1.7;color:var(--fg2)}
-
-/* LOADING */
 .loading-overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.97);z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:24px}
 .loading-overlay.active{display:flex}
 .loading-text{font-size:clamp(32px,5vw,56px);font-weight:300;font-style:italic;animation:pulse 2s infinite}
 .loading-bar{width:140px;height:1px;background:var(--line2);position:relative;overflow:hidden}
 .loading-bar::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--fg2);animation:slideBar 1s infinite}
 .loading-sub{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--fg3)}
-
-/* TOAST */
 .copy-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--fg);color:var(--bg);font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:10px 20px;border-radius:2px;opacity:0;transition:all .3s;pointer-events:none;z-index:999}
 .copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
 @keyframes pulse{0%,100%{opacity:.15}50%{opacity:1}}
 @keyframes slideBar{0%{left:-100%}100%{left:100%}}
-
 @media(max-width:768px){
   .section,.palette-header,.export-section,.preview-section{padding-left:24px;padding-right:24px}
-  .api-bar{padding-left:24px;padding-right:24px}
   .swatches-container{grid-template-columns:repeat(3,1fr)}
   .usage-grid{grid-template-columns:1fr}
   .usage-card{border-right:none;border-bottom:1px solid var(--line)}
@@ -125,13 +91,6 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100
 </style>
 </head>
 <body>
-
-<!-- API Key Bar -->
-<div class="api-bar">
-  <label for="api-key-input">Anthropic API Key</label>
-  <input type="password" id="api-key-input" class="api-input" placeholder="sk-ant-..." autocomplete="off">
-  <span class="api-note">Your key is never stored or sent anywhere except directly to api.anthropic.com</span>
-</div>
 
 <section class="section">
   <h1 class="hero-title">Tell me who you are.<br><em>I will tell you your colors.</em></h1>
@@ -249,12 +208,9 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100
 <div class="copy-toast" id="toast"></div>
 
 <script>
+var WORKER = "https://muddy-forest-96c8.cathycavander.workers.dev/";
 var currentPalette = null;
-var answers = { q1: "", q2: "", q3: "", q4: "" };
-
-function getApiKey() {
-  return document.getElementById("api-key-input").value.trim();
-}
+var answers = {q1:"",q2:"",q3:"",q4:""};
 
 function selectOption(qid, el, value) {
   var pills = document.querySelectorAll("#" + qid + " .option-pill");
@@ -263,9 +219,7 @@ function selectOption(qid, el, value) {
   answers[qid] = value;
 }
 
-document.getElementById("q4").addEventListener("input", function(e) {
-  answers.q4 = e.target.value;
-});
+document.getElementById("q4").addEventListener("input", function(e) { answers.q4 = e.target.value; });
 
 function showToast(msg) {
   var t = document.getElementById("toast");
@@ -283,15 +237,15 @@ function applyPreview(colors) {
   document.getElementById("ps").style.background = c[0];
   document.getElementById("pll").style.background = c[2];
   document.getElementById("pls").style.background = c[2];
-  var nav = ["pn1", "pn2", "pn3"];
+  var nav = ["pn1","pn2","pn3"];
   for (var i = 0; i < nav.length; i++) {
-    document.getElementById(nav[i]).style.background = (i === 0) ? c[2] : c[1];
+    document.getElementById(nav[i]).style.background = i === 0 ? c[2] : c[1];
   }
   document.getElementById("pm").style.background = c[4];
   document.getElementById("ptag").style.background = c[2];
   document.getElementById("ph1").style.background = c[0];
   document.getElementById("ph2").style.background = c[0];
-  var bl = ["pb1", "pb2", "pb3"];
+  var bl = ["pb1","pb2","pb3"];
   for (var j = 0; j < bl.length; j++) { document.getElementById(bl[j]).style.background = c[0]; }
   document.getElementById("pc").style.background = c[2];
   document.getElementById("pab").style.background = c[3];
@@ -299,22 +253,20 @@ function applyPreview(colors) {
 
 function dl(content, filename, mime) {
   var a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([content], { type: mime }));
+  a.href = URL.createObjectURL(new Blob([content], {type: mime}));
   a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
 }
 
-function slug(s) {
-  return s.toLowerCase().replace(/\s+/g, "-");
-}
+function slug(s) { return s.toLowerCase().replace(/\s+/g, "-"); }
 
 function exportCSS() {
   if (!currentPalette) return;
   var s = slug(currentPalette.paletteName);
   var vars = currentPalette.colors.map(function(c, i) {
-    return "  --" + s + "-" + (i + 1) + ": " + c.hex.toUpperCase() + ";";
+    return "  --" + s + "-" + (i+1) + ": " + c.hex.toUpperCase() + ";";
   }).join("\n");
   dl(":root {\n" + vars + "\n}\n", s + ".css", "text/css");
   showToast("CSS downloaded");
@@ -329,19 +281,15 @@ function exportSVG() {
       "<text x='" + (x + 16) + "' y='" + (H * 0.6 + 28) + "' font-family='sans-serif' font-size='13' fill='#1a1a1a'>" + c.name + "</text>" +
       "<text x='" + (x + 16) + "' y='" + (H * 0.6 + 46) + "' font-family='monospace' font-size='11' fill='#555'>" + c.hex.toUpperCase() + "</text>";
   }).join("");
-  dl(
-    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 " + W + " " + H + "'>" +
-    "<rect width='" + W + "' height='" + H + "' fill='#f7f6f4'/>" + rects + "</svg>",
-    slug(currentPalette.paletteName) + ".svg", "image/svg+xml"
-  );
+  dl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 " + W + " " + H + "'><rect width='" + W + "' height='" + H + "' fill='#f7f6f4'/>" + rects + "</svg>",
+    slug(currentPalette.paletteName) + ".svg", "image/svg+xml");
   showToast("SVG downloaded");
 }
 
 function copyAllHex() {
   if (!currentPalette) return;
-  navigator.clipboard.writeText(
-    currentPalette.colors.map(function(c) { return c.hex.toUpperCase(); }).join(", ")
-  ).then(function() { showToast("All hex values copied"); });
+  navigator.clipboard.writeText(currentPalette.colors.map(function(c) { return c.hex.toUpperCase(); }).join(", "))
+    .then(function() { showToast("All hex values copied"); });
 }
 
 function exportJSON() {
@@ -351,8 +299,8 @@ function exportJSON() {
 }
 
 function buildPrompt() {
-  return [
-    "You are a color theorist. Generate a 5-color palette based on this creative profile.",
+  var lines = [
+    "You are a color theorist. Generate a 5-color palette for a Senior UX Designer.",
     "",
     "Profile:",
     "- Feeling: " + answers.q1,
@@ -360,25 +308,26 @@ function buildPrompt() {
     "- Approach: " + answers.q3,
     "- Emotion: " + (answers.q4 || "not specified"),
     "",
-    "Return ONLY a raw JSON object. No markdown, no code fences, no explanation. Just the JSON.",
+    "Return ONLY a raw JSON object with no markdown, no code blocks, no explanation:",
     "{",
     '  "paletteName": "TWO OR THREE WORDS IN CAPS",',
     '  "subtitle": "short poetic phrase",',
     '  "description": "Two sentences in second person.",',
     '  "colors": [',
-    '    {"hex": "#XXXXXX", "name": "color name", "role": "Primary"},',
-    '    {"hex": "#XXXXXX", "name": "color name", "role": "Secondary"},',
-    '    {"hex": "#XXXXXX", "name": "color name", "role": "Accent"},',
-    '    {"hex": "#XXXXXX", "name": "color name", "role": "Base"},',
-    '    {"hex": "#XXXXXX", "name": "color name", "role": "Highlight"}',
+    '    {"hex": "#XXXXXX", "name": "name", "role": "Primary"},',
+    '    {"hex": "#XXXXXX", "name": "name", "role": "Secondary"},',
+    '    {"hex": "#XXXXXX", "name": "name", "role": "Accent"},',
+    '    {"hex": "#XXXXXX", "name": "name", "role": "Base"},',
+    '    {"hex": "#XXXXXX", "name": "name", "role": "Highlight"}',
     "  ],",
     '  "usages": [',
-    '    {"icon": "◈", "title": "Dashboard and Data Viz", "desc": "One sentence about how to use this palette here."},',
-    '    {"icon": "◉", "title": "UX and Product Design", "desc": "One sentence about how to use this palette here."},',
-    '    {"icon": "◎", "title": "Brand and Portfolio", "desc": "One sentence about how to use this palette here."}',
+    '    {"icon": "O", "title": "Dashboard and Data Viz", "desc": "One sentence."},',
+    '    {"icon": "O", "title": "UX and Product Design", "desc": "One sentence."},',
+    '    {"icon": "O", "title": "Brand and Portfolio", "desc": "One sentence."}',
     "  ]",
     "}"
-  ].join("\n");
+  ];
+  return lines.join("\n");
 }
 
 function generatePalette() {
@@ -386,56 +335,25 @@ function generatePalette() {
     showToast("Please answer the first 3 questions");
     return;
   }
-  var apiKey = getApiKey();
-  if (!apiKey) {
-    showToast("Please enter your Anthropic API key");
-    document.getElementById("api-key-input").focus();
-    return;
-  }
-
   document.getElementById("gen-btn").disabled = true;
   document.getElementById("loading").classList.add("active");
 
-  fetch("https://api.anthropic.com/v1/messages", {
+  fetch(WORKER, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true"
-    },
-    body: JSON.stringify({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 1024,
-      messages: [
-        { role: "user", content: buildPrompt() }
-      ]
-    })
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({prompt: buildPrompt()})
   })
-  .then(function(res) {
-    if (!res.ok) {
-      return res.json().then(function(err) {
-        throw new Error(err.error && err.error.message ? err.error.message : "API error " + res.status);
-      });
-    }
-    return res.json();
-  })
+  .then(function(res) { return res.json(); })
   .then(function(data) {
-    var text = data.content && data.content[0] && data.content[0].text;
-    if (!text) throw new Error("Empty response from API");
-
-    // Strip any accidental markdown fences
-    text = text.replace(/^```[a-z]*\n?/i, "").replace(/\n?```$/,"").trim();
-
-    var palette = JSON.parse(text);
-    if (!palette.colors || !Array.isArray(palette.colors)) throw new Error("Invalid palette structure");
-
-    currentPalette = palette;
-    renderPalette(palette);
+    console.log("Response:", JSON.stringify(data));
+    if (data.error) { showToast("Error: " + data.error); return; }
+    if (!data.colors) { showToast("Unexpected response - see console"); return; }
+    currentPalette = data;
+    renderPalette(data);
   })
   .catch(function(err) {
     console.error(err);
-    showToast("Error: " + err.message);
+    showToast("Connection error - please try again");
   })
   .finally(function() {
     document.getElementById("loading").classList.remove("active");
@@ -453,13 +371,11 @@ function renderPalette(palette) {
   palette.colors.forEach(function(color) {
     var s = document.createElement("div");
     s.className = "swatch";
-    s.innerHTML =
-      "<div class='swatch-color' style='background:" + color.hex + "'></div>" +
+    s.innerHTML = "<div class='swatch-color' style='background:" + color.hex + "'></div>" +
       "<div class='swatch-info'>" +
-        "<span class='swatch-role'>" + color.role + "</span>" +
-        "<span class='swatch-name'>" + color.name + "</span>" +
-        "<span class='swatch-hex'>" + color.hex.toUpperCase() + "</span>" +
-      "</div>";
+      "<span class='swatch-role'>" + color.role + "</span>" +
+      "<span class='swatch-name'>" + color.name + "</span>" +
+      "<span class='swatch-hex'>" + color.hex.toUpperCase() + "</span></div>";
     s.addEventListener("click", function() { copySwatch(color.hex.toUpperCase()); });
     sc.appendChild(s);
   });
@@ -471,16 +387,14 @@ function renderPalette(palette) {
   palette.usages.forEach(function(u) {
     var card = document.createElement("div");
     card.className = "usage-card";
-    card.innerHTML =
-      "<div class='usage-icon'>" + u.icon + "</div>" +
+    card.innerHTML = "<div class='usage-icon'>" + u.icon + "</div>" +
       "<div class='usage-title'>" + u.title + "</div>" +
       "<p class='usage-desc'>" + u.desc + "</p>";
     ug.appendChild(card);
   });
 
-  var resultArea = document.getElementById("result-area");
-  resultArea.style.display = "block";
-  resultArea.scrollIntoView({ behavior: "smooth", block: "start" });
+  document.getElementById("result-area").style.display = "block";
+  document.getElementById("result-area").scrollIntoView({behavior:"smooth", block:"start"});
 }
 </script>
 </body>
