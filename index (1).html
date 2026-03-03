@@ -327,6 +327,10 @@ function generatePalette() {
   })
   .then(function(res) { return res.json(); })
   .then(function(palette) {
+    if (!palette.colors) {
+      showToast(JSON.stringify(palette).substring(0, 100));
+      return;
+    }
     currentPalette = palette;
     renderPalette(palette);
   })
