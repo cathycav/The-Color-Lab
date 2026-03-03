@@ -324,21 +324,17 @@ function generatePalette() {
     return res.json();
   })
   .then(function(data) {
-  console.log('Worker response:', JSON.stringify(data));
-  
-  // Handle if worker returns raw Anthropic response instead of parsed palette
-  let palette = data;
-  if (data.content && data.content[0] && data.content[0].text) {
-    let raw = data.content[0].text.replace(/```json|```/g, '').trim();
-    palette = JSON.parse(raw);
-  }
-  
-  if (data.error) { showToast('Error: ' + data.error); return; }
-  if (!palette.colors || palette.colors.length < 5) { showToast('Bad response - check console'); return; }
-  
-  currentPalette = palette;
-  renderPalette(palette);
-})
+    console.log('Worker response:', JSON.stringify(data));
+    if (data.error) {
+      showToast('Error: ' + data.error);
+      return;
+    }
+    if (!data.colors) {
+      showToast('Bad response - check console');
+      return;
+    }
+    currentPalette = data;
+    renderPalette(data);
   })
   .catch(function(err) {
     console.error('Fetch error:', err);
@@ -365,9 +361,7 @@ function renderPalette(palette) {
     sc.appendChild(s);
   });
 
-  function applyPreview(colors) {
-  if (!colors || colors.length < 5) return;
-  // ... rest of function;
+  applyPreview(palette.colors);
 
   var ug = document.getElementById('usage-grid');
   ug.innerHTML = '';
