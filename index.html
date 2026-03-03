@@ -296,7 +296,8 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:32p
 <div class="copy-toast" id="toast"></div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-let currentPalette = null;
+const API_KEY = "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"; // ← Paste your Anthropic API key here
+  let currentPalette = null;
 const answers = {q1:'',q2:'',q3:'',q4:''};
 let isDark = false;
 
@@ -432,18 +433,12 @@ Return ONLY valid JSON, no markdown:
 }`;
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("https://muddy-forest-96c8.cathycavander.workers.dev/", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{role: "user", content: prompt}]
-      })
+      body: JSON.stringify({prompt})
     });
-    const data = await res.json();
-    const raw = data.content.map(i => i.text || "").join("");
-    const palette = JSON.parse(raw.replace(/```json|```/g,"").trim());
+    const palette = await res.json();
     currentPalette = palette;
     renderPalette(palette);
   } catch(err) {
